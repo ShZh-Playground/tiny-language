@@ -71,8 +71,11 @@ public class Scanner {
             case '*': addToken(STAR); break;
             case '/':
                 if (match('/')) {
-                    // Comment
+                    // Line comment
                     while (peek() != '\n' && !isAtEnd()) advance();
+                } else if (match('*')) {
+                    // Block comment
+                    blockComment();
                 } else {
                     // Normal slash
                     addToken(SLASH);
@@ -137,11 +140,15 @@ public class Scanner {
     }
 
     private boolean match(char excepted) {
-        return !isAtEnd() && source.charAt(current++) == excepted;
+        if (!isAtEnd() && source.charAt(current) == excepted) {
+            ++current;
+            return true;
+        }
+        return false;
     }
     //endregion
 
-    //region identifier and literal part
+    //region difficult handling tokens
     private void identifier() {
         while (isAlphaNumeric(peek())) advance();
         String text = source.substring(start, current);
@@ -167,21 +174,38 @@ public class Scanner {
 
     private void string() {
         while (peek() != '"' && !isAtEnd()) {
-            if (peek() == '\n') line++;
+            if (peek() == '\n') {
+                ++line;
+            }
             advance();
         }
-
+        // The " must be paired
         if (isAtEnd()) {
             TinyLanguage.error(line, "Unterminated string.");
             return;
         }
-
         // The closing ".
         advance();
-
-        // Trim the surrounding quotes.
+        // Trim the surrounding quotes
+        // And add to tokens array
         String value = source.substring(start + 1, current - 1);
         addToken(STRING, value);
+    }
+
+    private void blockComment() {
+        while (peek() != '*' && peekNext() != '/' && !isAtEnd()) {
+            if (peek() == '\n') {
+                ++line;
+            }
+            advance();
+        }
+        if (isAtEnd()) {
+            TinyLanguage.error(line, "Unterminated block comment.");
+            return;
+        }
+        // The closing * and /
+        advance();
+        advance();
     }
     //endregion
 
