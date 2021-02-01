@@ -1,13 +1,15 @@
 package io.github.tl;
 
+import io.github.tl.scan.Scanner;
+import io.github.tl.scan.Token;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Scanner;
-import java.util.stream.Stream;
+import java.util.List;
 
 public class TinyLanguage {
     static boolean hadError = false;
@@ -49,8 +51,14 @@ public class TinyLanguage {
 
     private static void run(String source) {
         Scanner scanner = new Scanner(source);
-        Stream<String> tokens = scanner.tokens();
+        List<Token> tokens = scanner.scanTokens();
 
         tokens.forEach(System.out::println);
     }
+
+    public static void error(int line, String message) {
+        hadError = true;
+        System.out.println("Line " + line + ": " + message);
+    }
+
 }
