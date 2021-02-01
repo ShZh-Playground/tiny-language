@@ -9,7 +9,9 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-public class tl {
+public class TinyLanguage {
+    static boolean hadError = false;
+
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: tl [script]");
@@ -32,12 +34,17 @@ public class tl {
                 break;
             }
             run(line);
+            hadError = false;
         }
     }
 
     private static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
+
+        if (hadError) {
+            System.exit(65);
+        }
     }
 
     private static void run(String source) {
