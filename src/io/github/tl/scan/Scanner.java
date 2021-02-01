@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.github.tl.scan.TokenType.*;
+import static io.github.tl.utils.Character.*;
 
 public class Scanner {
     private final String source;
@@ -112,22 +113,6 @@ public class Scanner {
                 }
                 break;
         }
-    }
-    //endregion
-
-    //region boolean function part
-    private boolean isAlpha(char c) {
-        return (c >= 'a' && c <= 'z') ||
-                (c >= 'A' && c <= 'Z') ||
-                c == '_';
-    }
-
-    private boolean isAlphaNumeric(char c) {
-        return isAlpha(c) || isDigit(c);
-    }
-
-    private boolean isDigit(char c) {
-        return c >= '0' && c <= '9';
     }
     //endregion
 
