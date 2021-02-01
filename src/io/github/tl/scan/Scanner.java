@@ -19,6 +19,7 @@ public class Scanner {
 
     private static final Map<String, TokenType> keywords;
 
+    // Key word definition
     static {
         keywords = new HashMap<>();
         keywords.put("and",    AND);
@@ -43,6 +44,7 @@ public class Scanner {
         this.source = source;
     }
 
+    //region token scanner part
     public List<Token> scanTokens() {
         while (!isAtEnd()) {
             start = current;
@@ -111,7 +113,9 @@ public class Scanner {
                 break;
         }
     }
+    //endregion
 
+    //region boolean function part
     private boolean isAlpha(char c) {
         return (c >= 'a' && c <= 'z') ||
                 (c >= 'A' && c <= 'Z') ||
@@ -125,7 +129,9 @@ public class Scanner {
     private boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
+    //endregion
 
+    //region character dealing part
     private char advance() {
         ++current;
         return source.charAt(current - 1);
@@ -148,7 +154,9 @@ public class Scanner {
     private boolean match(char excepted) {
         return !isAtEnd() && source.charAt(current++) == excepted;
     }
+    //endregion
 
+    //region identifier and literal part
     private void identifier() {
         while (isAlphaNumeric(peek())) advance();
         String text = source.substring(start, current);
@@ -190,7 +198,9 @@ public class Scanner {
         String value = source.substring(start + 1, current - 1);
         addToken(STRING, value);
     }
+    //endregion
 
+    //region add token part
     private void addToken(TokenType tokenType) {
         addToken(tokenType, null);
     }
@@ -199,4 +209,5 @@ public class Scanner {
         String text = source.substring(start, current);
         tokens.add(new Token(tokenType, text, literal, line));
     }
+    //endregion
 }
