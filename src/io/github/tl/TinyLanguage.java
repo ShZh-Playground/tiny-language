@@ -57,21 +57,25 @@ public class TinyLanguage {
         // Get tokens
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
-        if (hadError) {
-            return;
-        }
         // Get expression
         Parser parser = new Parser(tokens);
         Expr expression = parser.parse();
+        // Immediately stop compiling
+        if (hadError) {
+            return;
+        }
         System.out.println(new AstPrinter().print(expression));
     }
 
+    // Error from scanner
     public static void error(int line, String message) {
         hadError = true;
         System.out.println("Line " + line + ": " + message);
     }
 
+    // Error from parser
     public static void error(Token token, String message) {
+        hadError = true;
         if (token.type == TokenType.EOF) {
             System.out.println(token.line + " at end" + message);
         } else {
