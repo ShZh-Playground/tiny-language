@@ -54,4 +54,19 @@ public class AstPrinter implements Expr.Visitor<String>  {
     public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
     }
+
+    @Override
+    public String visitTernaryExpr(Expr.Ternary expr) {
+        String rhs = parenthesize(expr.colon.lexeme, expr.left, expr.right);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("(").append(expr.question.lexeme);
+        builder.append(" ");
+        builder.append(expr.condition.accept(this));
+        builder.append(" ");
+        builder.append(rhs);
+        builder.append(")");
+
+        return builder.toString();
+    }
 }

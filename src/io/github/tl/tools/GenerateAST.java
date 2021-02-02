@@ -13,11 +13,13 @@ public class GenerateAST {
             System.exit(64);
         }
         String outputDir = args[0];
+        // Include field type
         defineAst(outputDir, "Expr", Arrays.asList(
                 "Binary   : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
-                "Unary    : Token operator, Expr right"
+                "Unary    : Token operator, Expr right",
+                "Ternary  : Expr condition, Token question, Expr left, Token colon, Expr right"
         ));
     }
 

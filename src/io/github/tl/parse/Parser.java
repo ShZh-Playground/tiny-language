@@ -55,7 +55,26 @@ public class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return ternary();
+    }
+
+    private Expr ternary() {
+        Expr expr = comparison();   // condition
+
+        if (match(QUESTION)) {
+            Token question = previous();
+            Token nextToken = peekNext();
+            if (nextToken != null && nextToken.type == COLON) {
+                Expr leftExpr = comparison();
+                Token colon = advance();
+                Expr rightExpr = comparison();
+                expr = new Expr.Ternary(expr, question, leftExpr, colon,rightExpr);
+            } else {
+                throw error(question, " illegal ternary expression.");
+            }
+        }
+
+        return expr;
     }
 
     private Expr equality() {
@@ -130,6 +149,7 @@ public class Parser {
             consume(RIGHT_PAREN, " Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
+        // Need one expression(important!!)
         throw error(peek(), " Expect expression.");
     }
 
@@ -159,6 +179,13 @@ public class Parser {
 
     private Token peek() {
         return tokens.get(current);
+    }
+
+    private Token peekNext() {
+        if (!isAtEnd() && tokens.get(current + 1).type != EOF) {
+            return tokens.get(current + 1);
+        }
+        return null;
     }
 
     private Token previous() {
