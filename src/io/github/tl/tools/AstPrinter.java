@@ -1,9 +1,10 @@
-package io.github.tl.parse;
+package io.github.tl.tools;
 
+import io.github.tl.parse.Expr;
 import io.github.tl.scan.Token;
 import io.github.tl.scan.TokenType;
 
-public class AstPrinter implements Expr.Visitor<String> {
+public class AstPrinter implements Expr.Visitor<String>  {
     public static void main(String[] args) {
         Expr expression = new Expr.Binary(
                 new Expr.Unary(
