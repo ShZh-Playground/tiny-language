@@ -127,10 +127,10 @@ public class Parser {
 
         if (match(LEFT_PAREN)) {
             Expr expr = expression();
-            consume(RIGHT_PAREN, "Expect ')' after expression.");
+            consume(RIGHT_PAREN, " Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
-        throw error(peek(), "Expect expression.");
+        throw error(peek(), " Expect expression.");
     }
 
     private Token consume(TokenType expected, String message) {

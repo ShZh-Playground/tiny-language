@@ -18,7 +18,7 @@ public class AstPrinter implements Expr.Visitor<String>  {
     }
 
     public String print(Expr expr) {
-        return expr.accept(this);
+        return expr == null? "" : expr.accept(this);
     }
 
     private String parenthesize(String name, Expr... exprs) {
