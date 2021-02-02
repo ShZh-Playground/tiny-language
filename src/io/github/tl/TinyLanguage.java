@@ -1,7 +1,11 @@
 package io.github.tl;
 
+import io.github.tl.parse.Expr;
+import io.github.tl.parse.Parser;
 import io.github.tl.scan.Scanner;
 import io.github.tl.scan.Token;
+import io.github.tl.scan.TokenType;
+import io.github.tl.tools.AstPrinter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,15 +54,29 @@ public class TinyLanguage {
     }
 
     private static void run(String source) {
+        // Get tokens
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
-
-        tokens.forEach(System.out::println);
+        if (hadError) {
+            return;
+        }
+        // Get expression
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
+        System.out.println(new AstPrinter().print(expression));
     }
 
     public static void error(int line, String message) {
         hadError = true;
         System.out.println("Line " + line + ": " + message);
+    }
+
+    public static void error(Token token, String message) {
+        if (token.type == TokenType.EOF) {
+            System.out.println(token.line + " at end" + message);
+        } else {
+            System.out.println(token.line + " at '" + token.lexeme + "'" + message);
+        }
     }
 
 }
