@@ -1,4 +1,4 @@
 package io.github.tl.error;
 
-public class ScanError extends RuntimeException {
+public class ScanError extends Exception {
 }
