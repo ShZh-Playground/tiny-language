@@ -1,11 +1,12 @@
 package io.github.tl;
 
+import io.github.tl.error.RuntimeError;
+import io.github.tl.interpret.Interpreter;
 import io.github.tl.parse.Expr;
 import io.github.tl.parse.Parser;
 import io.github.tl.scan.Scanner;
 import io.github.tl.scan.Token;
 import io.github.tl.scan.TokenType;
-import io.github.tl.tools.AstPrinter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class TinyLanguage {
     static boolean hadError = false;
+    static boolean hadRuntimeError = false;
 
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
@@ -51,6 +53,9 @@ public class TinyLanguage {
         if (hadError) {
             System.exit(65);
         }
+        if (hadRuntimeError) {
+            System.exit(70);
+        }
     }
 
     private static void run(String source) {
@@ -64,7 +69,8 @@ public class TinyLanguage {
         if (hadError) {
             return;
         }
-        System.out.println(new AstPrinter().print(expression));
+        Interpreter interpreter = new Interpreter();
+        interpreter.interpret(expression);
     }
 
     // Error from scanner
@@ -77,10 +83,17 @@ public class TinyLanguage {
     public static void error(Token token, String message) {
         hadError = true;
         if (token.type == TokenType.EOF) {
-            System.out.println(token.line + " at end" + message);
+            System.err.println(token.line + " at end" + message);
         } else {
-            System.out.println(token.line + " at '" + token.lexeme + "'" + message);
+            System.err.println(token.line + " at '" + token.lexeme + "'" + message);
         }
+    }
+
+    // Error from interpreter
+    public static void runtimeError(RuntimeError error) {
+        hadRuntimeError = true;
+        System.err.println(error.getMessage() +
+                "\n[line " + error.token.line + "]");
     }
 
 }
