@@ -65,6 +65,14 @@ public class Interpreter implements Expr.Visitor<Object> {
                     return (String)left + (String)right;
                 }
 
+                if (left instanceof String && right instanceof Double) {
+                    return (String)left + stringify(right);
+                }
+
+                if (left instanceof Double && right instanceof String) {
+                    return stringify(left) + (String)right;
+                }
+
                 break;
             case MINUS:
                 checkNumberOperands(expr.operator, left, right);
