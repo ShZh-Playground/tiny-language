@@ -20,7 +20,7 @@ public class TinyLanguage {
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         if (args.length > 1) {
             System.out.println("Usage: tl [script]");
             System.exit(64);
@@ -31,11 +31,13 @@ public class TinyLanguage {
         }
     }
 
-    private static void runPrompt() throws IOException {
+    private static void runPrompt() throws IOException, InterruptedException {
         InputStreamReader inputStreamReader = new InputStreamReader(System.in);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
         while (true) {
+            // Distinguish stdout and stderr
+            Thread.sleep(100);
             System.out.print(">>> ");
             String line = bufferedReader.readLine();
             if (line == null) {
@@ -62,6 +64,10 @@ public class TinyLanguage {
         // Get tokens
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
+        // Immediately stop compiling
+        if (hadError) {
+            return;
+        }
         // Get expression
         Parser parser = new Parser(tokens);
         Expr expression = parser.parse();
@@ -76,7 +82,7 @@ public class TinyLanguage {
     // Error from scanner
     public static void error(int line, String message) {
         hadError = true;
-        System.out.println("Line " + line + ": " + message);
+        System.err.println("Line " + line + ": " + message);
     }
 
     // Error from parser
