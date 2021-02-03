@@ -1,6 +1,7 @@
 package io.github.tl.scan;
 
 import io.github.tl.TinyLanguage;
+import io.github.tl.error.ScanError;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,11 +46,20 @@ public class Scanner {
         this.source = source;
     }
 
+    private static void error(int line, String message) {
+        TinyLanguage.error(line, message);
+        throw new ScanError();
+    }
+
     //region token scanner part
     public List<Token> scanTokens() {
-        while (!isAtEnd()) {
-            start = current;
-            scanToken();
+        try {
+            while (!isAtEnd()) {
+                start = current;
+                scanToken();
+            }
+        } catch (ScanError e) {
+            return null;
         }
         tokens.add(new Token(EOF, "", null, line));
         return tokens;
@@ -105,7 +115,9 @@ public class Scanner {
                 line++;
                 break;
             // Literals
-            case '"': string(); break;
+            case '"':
+            case '\'':
+                string(c); break;
             default:
                 // We cannot judge number in case statement
                 // The only way to scan number is in default branch
@@ -114,7 +126,7 @@ public class Scanner {
                 } else if (isAlpha(c)) {
                     identifier();
                 } else {
-                    TinyLanguage.error(line, "Unexpected character.");
+                    error(line, "Unexpected character.");
                 }
                 break;
         }
@@ -174,8 +186,8 @@ public class Scanner {
                 Double.parseDouble(source.substring(start, current)));
     }
 
-    private void string() {
-        while (peek() != '"' && !isAtEnd()) {
+    private void string(char c) {
+        while (peek() != c && !isAtEnd()) {
             if (peek() == '\n') {
                 ++line;
             }
@@ -183,10 +195,10 @@ public class Scanner {
         }
         // The " must be paired
         if (isAtEnd()) {
-            TinyLanguage.error(line, "Unterminated string.");
+            error(line, "Unterminated string.");
             return;
         }
-        // The closing ".
+        // The closing " or '.
         advance();
         // Trim the surrounding quotes
         // And add to tokens array
@@ -202,7 +214,7 @@ public class Scanner {
             advance();
         }
         if (isAtEnd()) {
-            TinyLanguage.error(line, "Unterminated block comment.");
+            error(line, "Unterminated block comment.");
             return;
         }
         // The closing * and /

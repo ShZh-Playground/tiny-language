@@ -1,6 +1,7 @@
 package io.github.tl.parse;
 
 import io.github.tl.TinyLanguage;
+import io.github.tl.error.ParseError;
 import io.github.tl.scan.Token;
 import io.github.tl.scan.TokenType;
 
@@ -9,8 +10,6 @@ import java.util.List;
 import static io.github.tl.scan.TokenType.*;
 
 public class Parser {
-    private static class ParseError extends RuntimeException {}
-
     private final List<Token> tokens;
     private int current = 0;
 
