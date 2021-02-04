@@ -102,19 +102,37 @@ public class Parser {
     }
 
     private Expr ternary() {
-        Expr expr = equality();   // condition
+        Expr expr = assignment();   // condition
 
         if (match(QUESTION)) {
             Token question = previous();
             Token nextToken = peekNext();
             if (nextToken != null && nextToken.type == COLON) {
-                Expr leftExpr = equality();
+                Expr leftExpr = assignment();
                 Token colon = advance();
-                Expr rightExpr = equality();
+                Expr rightExpr = assignment();
                 expr = new Expr.Ternary(expr, question, leftExpr, colon,rightExpr);
             } else {
                 throw error(question, " illegal ternary expression.");
             }
+        }
+
+        return expr;
+    }
+
+    private Expr assignment() {
+        Expr expr = equality();
+
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable)expr).name;
+                return new Expr.Assign(name, value);
+            }
+
+            throw error(equals, "Invalid assignment target.");
         }
 
         return expr;
