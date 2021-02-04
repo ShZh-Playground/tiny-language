@@ -3,18 +3,26 @@ package io.github.tl.interpret;
 import io.github.tl.TinyLanguage;
 import io.github.tl.error.RuntimeError;
 import io.github.tl.parse.Expr;
+import io.github.tl.parse.Stmt;
 import io.github.tl.scan.Token;
 
-public class Interpreter implements Expr.Visitor<Object> {
+import java.util.List;
+
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     //region interpreter logic
     private Object evaluate(Expr expression) {
         return expression.accept(this);
     }
 
-    public void interpret(Expr expression) {
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
+    }
+
+    public void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             TinyLanguage.runtimeError(error);
         }
@@ -130,6 +138,19 @@ public class Interpreter implements Expr.Visitor<Object> {
             checkNumberOperand(expr.question, right);
             return (double)right;
         }
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
     }
     //endregion
 

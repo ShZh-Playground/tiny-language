@@ -2,6 +2,8 @@ package io.github.tl.parse;
 
 import io.github.tl.scan.Token;
 
+import java.util.List;
+
 public abstract class Expr {
   public interface Visitor<R> {
     R visitBinaryExpr(Binary expr);

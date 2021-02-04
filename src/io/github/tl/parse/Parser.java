@@ -5,6 +5,7 @@ import io.github.tl.error.ParseError;
 import io.github.tl.scan.Token;
 import io.github.tl.scan.TokenType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.github.tl.scan.TokenType.*;
@@ -45,12 +46,32 @@ public class Parser {
     }
 
     //region grammar parser
-    public Expr parse() {
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
         try {
-            return expression();
-        } catch (ParseError error) {
+            while (!isAtEnd()) {
+                statements.add(statement());
+            }
+        } catch (ParseError e) {
             return null;
         }
+        return statements;
+    }
+
+    private Stmt statement() {
+        return match(PRINT)? printStatement() : expressionStatement();
+    }
+
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    private Stmt expressionStatement() {
+        Expr expr = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
     }
 
     private Expr expression() {

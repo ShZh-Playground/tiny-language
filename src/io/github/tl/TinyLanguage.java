@@ -2,8 +2,8 @@ package io.github.tl;
 
 import io.github.tl.error.RuntimeError;
 import io.github.tl.interpret.Interpreter;
-import io.github.tl.parse.Expr;
 import io.github.tl.parse.Parser;
+import io.github.tl.parse.Stmt;
 import io.github.tl.scan.Scanner;
 import io.github.tl.scan.Token;
 import io.github.tl.scan.TokenType;
@@ -70,13 +70,13 @@ public class TinyLanguage {
         }
         // Get expression
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
         // Immediately stop compiling
         if (hadError) {
             return;
         }
         Interpreter interpreter = new Interpreter();
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 
     // Error from scanner
