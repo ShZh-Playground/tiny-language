@@ -19,6 +19,7 @@ import java.util.List;
 public class TinyLanguage {
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
+    static Interpreter interpreter = new Interpreter();
 
     public static void main(String[] args) throws IOException, InterruptedException {
         if (args.length > 1) {
@@ -75,7 +76,6 @@ public class TinyLanguage {
         if (hadError) {
             return;
         }
-        Interpreter interpreter = new Interpreter();
         interpreter.interpret(statements);
     }
 

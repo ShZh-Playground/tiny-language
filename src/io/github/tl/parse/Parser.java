@@ -50,12 +50,35 @@ public class Parser {
         List<Stmt> statements = new ArrayList<>();
         try {
             while (!isAtEnd()) {
-                statements.add(statement());
+                statements.add(declaration());
             }
         } catch (ParseError e) {
             return null;
         }
         return statements;
+    }
+
+    private Stmt declaration() {
+        try {
+            if (match(VAR)) return varDeclaration();
+
+            return statement();
+        } catch (ParseError error) {
+            synchronize();
+            return null;
+        }
+    }
+
+    private Stmt varDeclaration() {
+        Token name = consume(IDENTIFIER, "Expect variable name.");
+
+        Expr initializer = null;
+        if (match(EQUAL)) {
+            initializer = expression();
+        }
+
+        consume(SEMICOLON, "Expect ';' after variable declaration.");
+        return new Stmt.Var(name, initializer);
     }
 
     private Stmt statement() {
@@ -79,15 +102,15 @@ public class Parser {
     }
 
     private Expr ternary() {
-        Expr expr = comparison();   // condition
+        Expr expr = equality();   // condition
 
         if (match(QUESTION)) {
             Token question = previous();
             Token nextToken = peekNext();
             if (nextToken != null && nextToken.type == COLON) {
-                Expr leftExpr = comparison();
+                Expr leftExpr = equality();
                 Token colon = advance();
-                Expr rightExpr = comparison();
+                Expr rightExpr = equality();
                 expr = new Expr.Ternary(expr, question, leftExpr, colon,rightExpr);
             } else {
                 throw error(question, " illegal ternary expression.");
@@ -168,6 +191,10 @@ public class Parser {
             Expr expr = expression();
             consume(RIGHT_PAREN, " Expect ')' after expression.");
             return new Expr.Grouping(expr);
+        }
+
+        if (match(IDENTIFIER)) {
+            return new Expr.Variable(previous());
         }
         // Need one expression(important!!)
         throw error(peek(), " Expect expression.");
