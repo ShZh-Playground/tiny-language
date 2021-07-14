@@ -6,6 +6,7 @@ import main.java.io.github.tl.scan.Token;
 import main.java.io.github.tl.scan.TokenType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static main.java.io.github.tl.scan.TokenType.*;
@@ -85,6 +86,9 @@ public class Parser {
         if (match(IF)) {
             return ifStatement();
         }
+        if (match(FOR)) {
+            return forStatement();
+        }
         if (match(WHILE)) {
             return whileStatement();
         }
@@ -130,6 +134,48 @@ public class Parser {
         Stmt body = statement();
 
         return new Stmt.While(condition, body);
+    }
+
+    // Transfer for statement to while statement
+    private Stmt forStatement() {
+        consume(LEFT_PAREN, "Expect '(' after for.");
+        // Initializer
+        Stmt initializer;
+        if (match(SEMICOLON)) {
+            initializer = null;
+        } else if (match(VAR)) {
+            initializer = varDeclaration();
+        } else {
+            initializer = expressionStatement();
+        }
+        // Condition
+        Expr condition = null;
+        if (!check(SEMICOLON)) {
+            condition = expression();
+        }
+        consume(SEMICOLON, "Expect ';' in for loop.");
+        // Increment
+        Expr increment = null;
+        if (!check(RIGHT_PAREN)) {
+            increment = expression();
+        }
+        consume(RIGHT_PAREN, "Expect ')' after '('.");
+        // Body
+        Stmt body = statement();
+
+        // Convert to while statement
+        Stmt whileBody = new Stmt.Block(
+                Arrays.asList(
+                        body,
+                        new Stmt.Expression(increment)
+                )
+        );
+        Expr whileCond = condition == null? new Expr.Literal(true) : condition;
+        Stmt whileStatement = new Stmt.While(whileCond, whileBody);
+
+        return initializer == null?
+                whileStatement :
+                new Stmt.Block(Arrays.asList(initializer, whileStatement));
     }
 
     private Stmt printStatement() {
