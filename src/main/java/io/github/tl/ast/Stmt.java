@@ -1,4 +1,4 @@
-package main.java.io.github.tl.parse;
+package main.java.io.github.tl.ast;
 
 import main.java.io.github.tl.scan.Token;
 

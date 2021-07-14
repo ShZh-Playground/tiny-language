@@ -1,6 +1,8 @@
 package main.java.io.github.tl.parse;
 
 import main.java.io.github.tl.TinyLanguage;
+import main.java.io.github.tl.ast.Expr;
+import main.java.io.github.tl.ast.Stmt;
 import main.java.io.github.tl.error.ParseError;
 import main.java.io.github.tl.scan.Token;
 import main.java.io.github.tl.scan.TokenType;

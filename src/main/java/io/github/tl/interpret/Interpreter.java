@@ -2,8 +2,8 @@ package main.java.io.github.tl.interpret;
 
 import main.java.io.github.tl.TinyLanguage;
 import main.java.io.github.tl.error.RuntimeError;
-import main.java.io.github.tl.parse.Expr;
-import main.java.io.github.tl.parse.Stmt;
+import main.java.io.github.tl.ast.Expr;
+import main.java.io.github.tl.ast.Stmt;
 import main.java.io.github.tl.scan.Token;
 import main.java.io.github.tl.scan.TokenType;
 

@@ -1,6 +1,6 @@
 package main.java.io.github.tl.tools;
 
-import main.java.io.github.tl.parse.Expr;
+import main.java.io.github.tl.ast.Expr;
 import main.java.io.github.tl.scan.Token;
 import main.java.io.github.tl.scan.TokenType;
 

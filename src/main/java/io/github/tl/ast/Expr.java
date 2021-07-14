@@ -1,8 +1,6 @@
-package main.java.io.github.tl.parse;
+package main.java.io.github.tl.ast;
 
 import main.java.io.github.tl.scan.Token;
-
-import java.util.List;
 
 public abstract class Expr {
   public interface Visitor<R> {
