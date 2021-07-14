@@ -1,7 +1,7 @@
-package io.github.tl.interpret;
+package main.java.io.github.tl.interpret;
 
-import io.github.tl.error.RuntimeError;
-import io.github.tl.scan.Token;
+import main.java.io.github.tl.error.RuntimeError;
+import main.java.io.github.tl.scan.Token;
 
 import java.util.HashMap;
 import java.util.Map;

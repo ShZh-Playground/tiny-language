@@ -1,4 +1,4 @@
-package io.github.tl.utils;
+package main.java.io.github.tl.utils;
 
 public class Character {
     public static boolean isAlpha(char c) {

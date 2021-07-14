@@ -1,15 +1,15 @@
-package io.github.tl.scan;
+package main.java.io.github.tl.scan;
 
-import io.github.tl.TinyLanguage;
-import io.github.tl.error.ScanError;
+import main.java.io.github.tl.TinyLanguage;
+import main.java.io.github.tl.error.ScanError;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.github.tl.scan.TokenType.*;
-import static io.github.tl.utils.Character.*;
+import static main.java.io.github.tl.scan.TokenType.*;
+import static main.java.io.github.tl.utils.Character.*;
 
 public class Scanner {
     private final String source;

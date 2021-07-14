@@ -1,4 +1,4 @@
-package io.github.tl.tools;
+package main.java.io.github.tl.tools;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,6 +25,7 @@ public class GenerateAST {
         ));
         // Statement
         defineAst(outputDir, "Stmt", Arrays.asList(
+                "If         : Expr condition, Stmt thenBranch, Stmt elseBranch",
                 "Block      : List<Stmt> statements",
                 "Expression : Expr expression",
                 "Print      : Expr expression",
@@ -36,9 +37,9 @@ public class GenerateAST {
         String path = outputDir + "/" + baseName + ".java";
         PrintWriter writer = new PrintWriter(path, StandardCharsets.UTF_8);
 
-        writer.println("package io.github.tl.parse;");
+        writer.println("package main.java.io.github.tl.parse;");
         writer.println();
-        writer.println("import io.github.tl.scan.Token;");
+        writer.println("import main.java.io.github.tl.scan.Token;");
         writer.println();
         writer.println("import java.util.List;");
         writer.println();

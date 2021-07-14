@@ -1,4 +1,4 @@
-package io.github.tl.scan;
+package main.java.io.github.tl.scan;
 
 public enum TokenType {
     // Single-character tokens.

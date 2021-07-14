@@ -1,6 +1,6 @@
-package io.github.tl.error;
+package main.java.io.github.tl.error;
 
-import io.github.tl.scan.Token;
+import main.java.io.github.tl.scan.Token;
 
 public class RuntimeError extends RuntimeException {
     public final Token token;

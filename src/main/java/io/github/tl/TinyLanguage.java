@@ -1,12 +1,12 @@
-package io.github.tl;
+package main.java.io.github.tl;
 
-import io.github.tl.error.RuntimeError;
-import io.github.tl.interpret.Interpreter;
-import io.github.tl.parse.Parser;
-import io.github.tl.parse.Stmt;
-import io.github.tl.scan.Scanner;
-import io.github.tl.scan.Token;
-import io.github.tl.scan.TokenType;
+import main.java.io.github.tl.error.RuntimeError;
+import main.java.io.github.tl.interpret.Interpreter;
+import main.java.io.github.tl.parse.Parser;
+import main.java.io.github.tl.parse.Stmt;
+import main.java.io.github.tl.scan.Scanner;
+import main.java.io.github.tl.scan.Token;
+import main.java.io.github.tl.scan.TokenType;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,8 +1,8 @@
-package io.github.tl.tools;
+package main.java.io.github.tl.tools;
 
-import io.github.tl.parse.Expr;
-import io.github.tl.scan.Token;
-import io.github.tl.scan.TokenType;
+import main.java.io.github.tl.parse.Expr;
+import main.java.io.github.tl.scan.Token;
+import main.java.io.github.tl.scan.TokenType;
 
 public class AstPrinter implements Expr.Visitor<String>  {
     public static void main(String[] args) {
@@ -69,14 +69,11 @@ public class AstPrinter implements Expr.Visitor<String>  {
     public String visitTernaryExpr(Expr.Ternary expr) {
         String rhs = parenthesize(expr.colon.lexeme, expr.left, expr.right);
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("(").append(expr.question.lexeme);
-        builder.append(" ");
-        builder.append(expr.condition.accept(this));
-        builder.append(" ");
-        builder.append(rhs);
-        builder.append(")");
-
-        return builder.toString();
+        return "(" + expr.question.lexeme +
+                " " +
+                expr.condition.accept(this) +
+                " " +
+                rhs +
+                ")";
     }
 }

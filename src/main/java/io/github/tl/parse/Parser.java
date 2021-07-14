@@ -1,14 +1,14 @@
-package io.github.tl.parse;
+package main.java.io.github.tl.parse;
 
-import io.github.tl.TinyLanguage;
-import io.github.tl.error.ParseError;
-import io.github.tl.scan.Token;
-import io.github.tl.scan.TokenType;
+import main.java.io.github.tl.TinyLanguage;
+import main.java.io.github.tl.error.ParseError;
+import main.java.io.github.tl.scan.Token;
+import main.java.io.github.tl.scan.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.tl.scan.TokenType.*;
+import static main.java.io.github.tl.scan.TokenType.*;
 
 public class Parser {
     private final List<Token> tokens;
@@ -82,6 +82,10 @@ public class Parser {
     }
 
     private Stmt statement() {
+        if (match(IF)) {
+            return ifStatement();
+        }
+
         if (match(PRINT)) {
             return printStatement();
         }
@@ -100,6 +104,20 @@ public class Parser {
 
         consume(RIGHT_BRACE, "Expect '}' after block.");
         return statements;
+    }
+
+    private Stmt ifStatement() {
+        consume(LEFT_PAREN, "Expect '(' after if.");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after '('");
+
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+        if (match(ELSE)) {
+            elseBranch = statement();
+        }
+
+       return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
     private Stmt printStatement() {

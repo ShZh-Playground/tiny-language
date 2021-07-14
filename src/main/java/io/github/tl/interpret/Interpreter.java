@@ -1,10 +1,10 @@
-package io.github.tl.interpret;
+package main.java.io.github.tl.interpret;
 
-import io.github.tl.TinyLanguage;
-import io.github.tl.error.RuntimeError;
-import io.github.tl.parse.Expr;
-import io.github.tl.parse.Stmt;
-import io.github.tl.scan.Token;
+import main.java.io.github.tl.TinyLanguage;
+import main.java.io.github.tl.error.RuntimeError;
+import main.java.io.github.tl.parse.Expr;
+import main.java.io.github.tl.parse.Stmt;
+import main.java.io.github.tl.scan.Token;
 
 import java.util.List;
 
@@ -165,6 +165,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Object visitVariableExpr(Expr.Variable expr) {
         return environment.get(expr.name);
+    }
+
+    @Override
+    public Void visitIfStmt(Stmt.If stmt) {
+        if (isTruthy(stmt.condition)) {
+            execute(stmt.thenBranch);
+        } else if (stmt.elseBranch != null) {
+            execute(stmt.elseBranch);
+        }
+        return null;
     }
 
     @Override
