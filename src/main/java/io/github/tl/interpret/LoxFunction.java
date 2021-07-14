@@ -1,6 +1,7 @@
 package main.java.io.github.tl.interpret;
 
 import main.java.io.github.tl.ast.Stmt;
+import main.java.io.github.tl.error.ReturnError;
 
 import java.util.List;
 
@@ -23,7 +24,12 @@ public class LoxFunction implements LoxCallable {
             environment.define(declaration.params.get(i).lexeme, arguments.get(i));
         }
 
-        interpreter.executeBlock(declaration.body, environment);
+        try {
+            interpreter.executeBlock(declaration.body, environment);
+        } catch (ReturnError returnValue) {
+            return returnValue.value;
+        }
+
         return null;
     }
 

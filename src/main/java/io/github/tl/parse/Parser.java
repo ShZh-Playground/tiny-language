@@ -116,6 +116,9 @@ public class Parser {
         if (match(WHILE)) {
             return whileStatement();
         }
+        if (match(RETURN)) {
+            return returnStatement();
+        }
         if (match(PRINT)) {
             return printStatement();
         }
@@ -158,6 +161,17 @@ public class Parser {
         Stmt body = statement();
 
         return new Stmt.While(condition, body);
+    }
+
+    private Stmt returnStatement() {
+        Token keyword = previous();
+        Expr value = null;
+        if (!check(SEMICOLON)) {
+            value = expression();
+        }
+
+        consume(SEMICOLON, "Expect ';' after return value.");
+        return new Stmt.Return(keyword, value);
     }
 
     // Transfer for statement to while statement
