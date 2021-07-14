@@ -7,6 +7,7 @@ import java.util.List;
 public abstract class Stmt {
   public interface Visitor<R> {
     R visitIfStmt(If stmt);
+    R visitWhileStmt(While stmt);
     R visitBlockStmt(Block stmt);
     R visitExpressionStmt(Expression stmt);
     R visitPrintStmt(Print stmt);
@@ -28,6 +29,21 @@ public abstract class Stmt {
     public final Expr condition;
     public final Stmt thenBranch;
     public final Stmt elseBranch;
+  }
+
+  public static class While extends Stmt {
+    public While(Expr condition, Stmt body) {
+      this.condition = condition;
+      this.body = body;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitWhileStmt(this);
+    }
+
+    public final Expr condition;
+    public final Stmt body;
   }
 
   public static class Block extends Stmt {
