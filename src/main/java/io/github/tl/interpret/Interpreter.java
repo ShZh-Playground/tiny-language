@@ -5,6 +5,7 @@ import main.java.io.github.tl.error.RuntimeError;
 import main.java.io.github.tl.parse.Expr;
 import main.java.io.github.tl.parse.Stmt;
 import main.java.io.github.tl.scan.Token;
+import main.java.io.github.tl.scan.TokenType;
 
 import java.util.List;
 
@@ -121,6 +122,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         // Unreachable.
         return null;
+    }
+
+    @Override
+    public Object visitLogicalExpr(Expr.Logical expr) {
+        Object left = evaluate(expr.left);
+        if (expr.operator.type == TokenType.AND) {
+            if (!isTruthy(left)) {
+                return left;
+            }
+        } else if (expr.operator.type == TokenType.OR) {
+            if (isTruthy(left)) {
+                return left;
+            }
+        }
+        return evaluate(expr.right);
     }
 
     @Override

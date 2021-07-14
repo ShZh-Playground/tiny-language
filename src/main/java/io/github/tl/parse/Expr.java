@@ -2,10 +2,13 @@ package main.java.io.github.tl.parse;
 
 import main.java.io.github.tl.scan.Token;
 
+import java.util.List;
+
 public abstract class Expr {
   public interface Visitor<R> {
     R visitAssignExpr(Assign expr);
     R visitBinaryExpr(Binary expr);
+    R visitLogicalExpr(Logical expr);
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
@@ -38,6 +41,23 @@ public abstract class Expr {
     @Override
     public <R> R accept(Visitor<R> visitor) {
       return visitor.visitBinaryExpr(this);
+    }
+
+    public final Expr left;
+    public final Token operator;
+    public final Expr right;
+  }
+
+  public static class Logical extends Expr {
+    public Logical(Expr left, Token operator, Expr right) {
+      this.left = left;
+      this.operator = operator;
+      this.right = right;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitLogicalExpr(this);
     }
 
     public final Expr left;
