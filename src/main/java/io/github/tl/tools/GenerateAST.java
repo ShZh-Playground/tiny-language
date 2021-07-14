@@ -17,6 +17,7 @@ public class GenerateAST {
         defineAst(outputDir, "Expr", Arrays.asList(
                 "Assign   : Token name, Expr value",
                 "Binary   : Expr left, Token operator, Expr right",
+                "Call     : Expr callee, Token paren, List<Expr> arguments",
                 "Logical  : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
@@ -30,6 +31,7 @@ public class GenerateAST {
                 "While      : Expr condition, Stmt body",
                 "Block      : List<Stmt> statements",
                 "Expression : Expr expression",
+                "Function   : Token name, List<Token> params, List<Stmt> body",
                 "Print      : Expr expression",
                 "Var        : Token name, Expr initializer"
         ));
@@ -39,7 +41,7 @@ public class GenerateAST {
         String path = outputDir + "/" + baseName + ".java";
         PrintWriter writer = new PrintWriter(path, StandardCharsets.UTF_8);
 
-        writer.println("package main.java.io.github.tl.parse;");
+        writer.println("package main.java.io.github.tl.ast;");
         writer.println();
         writer.println("import main.java.io.github.tl.scan.Token;");
         writer.println();
