@@ -5,12 +5,12 @@ import main.java.io.github.tl.error.ReturnError;
 
 import java.util.List;
 
-public class LoxFunction implements LoxCallable {
+public class Function implements Callable {
     private final Stmt.Function declaration;
 
     private final Environment closure;
 
-    public LoxFunction(Stmt.Function declaration, Environment closure) {
+    public Function(Stmt.Function declaration, Environment closure) {
         this.closure = closure;
         this.declaration = declaration;
     }

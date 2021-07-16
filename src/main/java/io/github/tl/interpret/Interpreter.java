@@ -136,11 +136,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             arguments.add(evaluate(argument));
         }
 
-        if (!(callee instanceof LoxCallable)) {
+        if (!(callee instanceof Callable)) {
             throw new RuntimeError(expr.paren, "Can only call functions and classes.");
         }
 
-        LoxCallable function = (LoxCallable)callee;
+        Callable function = (Callable)callee;
 
         if (function.arity() != expr.arguments.size()) {
             throw new RuntimeError(expr.paren,
@@ -243,7 +243,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitFunctionStmt(Stmt.Function stmt) {
-        LoxFunction function = new LoxFunction(stmt, environment);
+        Function function = new Function(stmt, environment);
         environment.define(stmt.name.lexeme, function);
         return null;
     }
