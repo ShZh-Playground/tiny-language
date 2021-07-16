@@ -9,10 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import static main.java.io.github.tl.TinyLanguage.error;
+
 public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+    private enum FunctionType {
+        NONE,
+        FUNCTION
+    }
+
     private Interpreter interpreter;
 
     private Stack<Map<String, Boolean>> scopes = new Stack<>();
+
+    private FunctionType currentFunctionType = FunctionType.NONE;
 
     public Resolver(Interpreter interpreter) {
         this.interpreter = interpreter;
@@ -122,7 +131,7 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         declare(stmt.name);
         define(stmt.name);
 
-        resolveFunction(stmt);
+        resolveFunction(stmt, FunctionType.FUNCTION);
         return null;
     }
 
@@ -134,6 +143,10 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitReturnStmt(Stmt.Return stmt) {
+        if (this.currentFunctionType == FunctionType.NONE) {
+            error(stmt.keyword, "Can't return from top-level code.");
+        }
+
         resolve(stmt.value);
         return null;
     }
@@ -153,6 +166,9 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (scopes.isEmpty()) return;
 
         Map<String, Boolean> scope = scopes.peek();
+        if (scope.containsKey(name.lexeme)) {
+            error(name, "Already variable with this name in this scope.");
+        }
         scope.put(name.lexeme, false);
     }
 
@@ -192,7 +208,10 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
-    private void resolveFunction(Stmt.Function function) {
+    private void resolveFunction(Stmt.Function function, FunctionType functionType) {
+        FunctionType enclosingFunction = this.currentFunctionType;
+        this.currentFunctionType = functionType;
+
         beginScope();
         for (Token param : function.params) {
             declare(param);
@@ -200,6 +219,8 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
         resolve(function.body);
         endScope();
+
+        this.currentFunctionType = enclosingFunction;
     }
     //endregion
 }
