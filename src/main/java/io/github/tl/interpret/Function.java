@@ -11,7 +11,7 @@ public class Function implements Callable {
     private final Environment closure;
 
     public Function(Stmt.Function declaration, Environment closure) {
-        this.closure = closure;
+        this.closure = (Environment) closure.clone();
         this.declaration = declaration;
     }
 

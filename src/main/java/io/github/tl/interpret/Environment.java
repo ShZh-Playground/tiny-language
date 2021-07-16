@@ -6,9 +6,9 @@ import main.java.io.github.tl.scan.Token;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Environment {
-    public final Environment enclosing;
-    private final Map<String, Object> values = new HashMap<>();
+public class Environment implements Cloneable {
+    public Environment enclosing;
+    private Map<String, Object> values = new HashMap<>();
 
     Environment() {
         enclosing = null;
@@ -45,5 +45,17 @@ public class Environment {
         }
 
         throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
+    }
+
+    @Override
+    public Object clone() {
+        Environment dup = null;
+        try {
+            dup = (Environment) super.clone();
+            dup.values = new HashMap<>(this.values);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return dup;
     }
 }
