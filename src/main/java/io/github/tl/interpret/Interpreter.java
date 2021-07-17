@@ -7,6 +7,7 @@ import main.java.io.github.tl.ast.Expr;
 import main.java.io.github.tl.ast.Stmt;
 import main.java.io.github.tl.resolver.Callable;
 import main.java.io.github.tl.resolver.Function;
+import main.java.io.github.tl.resolver.Instance;
 import main.java.io.github.tl.resolver.Klass;
 import main.java.io.github.tl.scan.Token;
 import main.java.io.github.tl.scan.TokenType;
@@ -162,6 +163,27 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
 
         return function.call(this, arguments);
+    }
+
+    @Override
+    public Object visitGetExpr(Expr.Get expr) {
+        Object object = evaluate(expr.object);
+        if (object instanceof Instance) {
+            return ((Instance)object).get(expr.name);
+        }
+
+        throw new RuntimeError(expr.name, "Only instances have properties.");
+    }
+
+    @Override
+    public Object visitSetExpr(Expr.Set expr) {
+        Object object = evaluate(expr.object);
+        if (!(object instanceof Instance)) {
+            throw new RuntimeError(expr.name, "Only instances can set properties.");
+        }
+        Object value = evaluate(expr.value);
+        ((Instance)object).set(expr.name, value);
+        return value;
     }
 
     @Override

@@ -4,6 +4,7 @@ import main.java.io.github.tl.TinyLanguage;
 import main.java.io.github.tl.ast.Expr;
 import main.java.io.github.tl.ast.Stmt;
 import main.java.io.github.tl.error.ParseError;
+import main.java.io.github.tl.resolver.Instance;
 import main.java.io.github.tl.scan.Token;
 import main.java.io.github.tl.scan.TokenType;
 
@@ -278,6 +279,9 @@ public class Parser {
             if (expr instanceof Expr.Variable) {
                 Token name = ((Expr.Variable)expr).name;
                 return new Expr.Assign(name, value);
+            } else if (expr instanceof Expr.Get) {
+                Expr.Get get = (Expr.Get)expr;
+                return new Expr.Set(get.object, get.name, value);
             }
 
             throw error(equals, "Invalid assignment target.");
@@ -376,7 +380,10 @@ public class Parser {
         while (true) {
             if (match(LEFT_PAREN)) {
                 expr = finishCall(expr);
-            } else {
+            } else if (match(DOT)) {
+                Token name = consume(IDENTIFIER, "Expected property name after '.'!");
+                return new Expr.Get(expr, name);
+            } else{
                 break;
             }
         }
