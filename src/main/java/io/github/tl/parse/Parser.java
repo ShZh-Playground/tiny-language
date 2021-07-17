@@ -119,6 +119,9 @@ public class Parser {
         if (match(RETURN)) {
             return returnStatement();
         }
+        if (match(CLASS)) {
+            return classStatement();
+        }
         if (match(PRINT)) {
             return printStatement();
         }
@@ -172,6 +175,20 @@ public class Parser {
 
         consume(SEMICOLON, "Expect ';' after return value.");
         return new Stmt.Return(keyword, value);
+    }
+
+    private Stmt classStatement() {
+        Token name = consume(IDENTIFIER, "Expected class name!");
+        consume(LEFT_BRACE, "Expected '{' after class!");
+
+        List<Stmt.Function> methods = new ArrayList<>();
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            Stmt.Function method = function("method");
+            methods.add(method);
+        }
+        consume(RIGHT_BRACE, "Expected '}' after '}'");
+
+        return new Stmt.Class(name, methods);
     }
 
     // Transfer for statement to while statement
