@@ -42,4 +42,10 @@ public class Function implements Callable {
     public String toString() {
         return "<fn " + declaration.name.lexeme + ">";
     }
+
+    public Object bind(Instance instance) {
+        Environment environment = new Environment(closure);
+        environment.define("this", instance);
+        return new Function(declaration, environment);
+    }
 }

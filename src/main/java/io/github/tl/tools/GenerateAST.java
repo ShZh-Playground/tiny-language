@@ -23,6 +23,7 @@ public class GenerateAST {
                 "Logical  : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
+                "This     : Token keyword",
                 "Unary    : Token operator, Expr right",
                 "Ternary  : Expr condition, Token question, Expr left, Token colon, Expr right",
                 "Variable : Token name"

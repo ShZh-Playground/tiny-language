@@ -408,6 +408,10 @@ public class Parser {
     }
 
     private Expr primary() {
+        if (match(THIS)) {
+            return new Expr.This(previous());
+        }
+
         if (match(FALSE)) return new Expr.Literal(false);
         if (match(TRUE)) return new Expr.Literal(true);
         if (match(NIL)) return new Expr.Literal(null);
@@ -425,6 +429,7 @@ public class Parser {
         if (match(IDENTIFIER)) {
             return new Expr.Variable(previous());
         }
+
         // Need one expression(important!!)
         throw error(peek(), " Expect expression.");
     }
