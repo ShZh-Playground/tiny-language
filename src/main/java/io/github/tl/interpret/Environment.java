@@ -10,11 +10,11 @@ public class Environment implements Cloneable {
     public Environment enclosing;
     private Map<String, Object> values = new HashMap<>();
 
-    Environment() {
+    public Environment() {
         enclosing = null;
     }
 
-    Environment(Environment enclosing) {
+    public Environment(Environment enclosing) {
         this.enclosing = enclosing;
     }
 

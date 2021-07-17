@@ -1,9 +1,9 @@
-package main.java.io.github.tl.interpret;
+package main.java.io.github.tl.resolver;
 
 public class Klass {
     public String name;
 
-    Klass(String name) {
+    public Klass(String name) {
         this.name = name;
     }
 

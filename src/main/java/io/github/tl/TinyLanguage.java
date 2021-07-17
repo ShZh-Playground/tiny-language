@@ -2,7 +2,7 @@ package main.java.io.github.tl;
 
 import main.java.io.github.tl.error.RuntimeError;
 import main.java.io.github.tl.interpret.Interpreter;
-import main.java.io.github.tl.interpret.Resolver;
+import main.java.io.github.tl.resolver.Resolver;
 import main.java.io.github.tl.parse.Parser;
 import main.java.io.github.tl.ast.Stmt;
 import main.java.io.github.tl.scan.Scanner;

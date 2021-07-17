@@ -1,4 +1,6 @@
-package main.java.io.github.tl.interpret;
+package main.java.io.github.tl.resolver;
+
+import main.java.io.github.tl.interpret.Interpreter;
 
 import java.util.List;
 

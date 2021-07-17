@@ -1,7 +1,9 @@
-package main.java.io.github.tl.interpret;
+package main.java.io.github.tl.resolver;
 
 import main.java.io.github.tl.ast.Stmt;
 import main.java.io.github.tl.error.ReturnError;
+import main.java.io.github.tl.interpret.Environment;
+import main.java.io.github.tl.interpret.Interpreter;
 
 import java.util.List;
 

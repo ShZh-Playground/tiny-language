@@ -5,6 +5,9 @@ import main.java.io.github.tl.error.ReturnError;
 import main.java.io.github.tl.error.RuntimeError;
 import main.java.io.github.tl.ast.Expr;
 import main.java.io.github.tl.ast.Stmt;
+import main.java.io.github.tl.resolver.Callable;
+import main.java.io.github.tl.resolver.Function;
+import main.java.io.github.tl.resolver.Klass;
 import main.java.io.github.tl.scan.Token;
 import main.java.io.github.tl.scan.TokenType;
 
@@ -28,7 +31,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         stmt.accept(this);
     }
 
-    void executeBlock(List<Stmt> statements, Environment environment) {
+    public void executeBlock(List<Stmt> statements, Environment environment) {
         Environment previous = this.environment;
         try {
             this.environment = environment;

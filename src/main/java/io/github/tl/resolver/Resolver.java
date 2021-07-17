@@ -1,7 +1,8 @@
-package main.java.io.github.tl.interpret;
+package main.java.io.github.tl.resolver;
 
 import main.java.io.github.tl.ast.Expr;
 import main.java.io.github.tl.ast.Stmt;
+import main.java.io.github.tl.interpret.Interpreter;
 import main.java.io.github.tl.scan.Token;
 
 import java.util.HashMap;
