@@ -15,7 +15,8 @@ import static main.java.io.github.tl.TinyLanguage.error;
 public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     private enum FunctionType {
         NONE,
-        FUNCTION
+        FUNCTION,
+        METHOD
     }
 
     private Interpreter interpreter;
@@ -152,6 +153,12 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitClassStmt(Stmt.Class stmt) {
         declare(stmt.name);
+
+        for (Stmt.Function method : stmt.methods) {
+            FunctionType declaration = FunctionType.METHOD;
+            resolveFunction(method, declaration);
+        }
+
         define(stmt.name);
         return null;
     }

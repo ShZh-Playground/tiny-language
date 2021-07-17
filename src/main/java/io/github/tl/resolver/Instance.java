@@ -18,15 +18,19 @@ public class Instance {
 
     @Override
     public String toString() {
-        return klass.name + " instance.";
+        return klass.getName() + " instance.";
     }
 
-    public Object get(Token property) {
-        if (fields.containsKey(property.lexeme)) {
-            return fields.get(property.lexeme);
+    public Object get(Token name) {
+        if (fields.containsKey(name.lexeme)) {
+            return fields.get(name.lexeme);
+        }
+        Function method = klass.findMethod(name.lexeme);
+        if (method != null) {
+            return method;
         }
 
-        throw new RuntimeError(property, "Undefined property '" + property.lexeme + "'.");
+        throw new RuntimeError(name, "Undefined property '" + name.lexeme + "'.");
     }
 
     public void set(Token property, Object value) {
