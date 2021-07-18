@@ -15,6 +15,7 @@ public abstract class Expr {
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitThisExpr(This expr);
+    R visitSuperExpr(Super expr);
     R visitUnaryExpr(Unary expr);
     R visitTernaryExpr(Ternary expr);
     R visitVariableExpr(Variable expr);
@@ -155,6 +156,21 @@ public abstract class Expr {
     }
 
     public final Token keyword;
+  }
+
+  public static class Super extends Expr {
+    public Super(Token keyword, Token method) {
+      this.keyword = keyword;
+      this.method = method;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitSuperExpr(this);
+    }
+
+    public final Token keyword;
+    public final Token method;
   }
 
   public static class Unary extends Expr {

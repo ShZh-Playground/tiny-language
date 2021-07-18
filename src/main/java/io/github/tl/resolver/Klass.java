@@ -2,8 +2,6 @@ package main.java.io.github.tl.resolver;
 
 import main.java.io.github.tl.interpret.Interpreter;
 
-import java.awt.event.WindowStateListener;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

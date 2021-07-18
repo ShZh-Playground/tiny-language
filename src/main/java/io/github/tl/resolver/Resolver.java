@@ -96,6 +96,12 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitSuperExpr(Expr.Super expr) {
+        resolveLocal(expr, expr.keyword);
+        return null;
+    }
+
+    @Override
     public Object visitUnaryExpr(Expr.Unary expr) {
         resolve(expr.right);
         return null;
@@ -169,6 +175,11 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             resolve(stmt.superclass);
         }
 
+        if (stmt.superclass != null) {
+            beginScope();
+            scopes.peek().put("super", true);
+        }
+
         beginScope();
         scopes.peek().put("this", true);
 
@@ -178,6 +189,10 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 declaration = FunctionType.INITIALIZER;
             }
             resolveFunction(method, declaration);
+        }
+
+        if (stmt.superclass != null) {
+            endScope();
         }
 
         endScope();
