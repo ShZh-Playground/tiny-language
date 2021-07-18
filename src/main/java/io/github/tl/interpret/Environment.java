@@ -47,7 +47,7 @@ public class Environment implements Cloneable {
         throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
     }
 
-    Object getAt(int distance, String name) {
+    public Object getAt(int distance, String name) {
         return ancestor(distance).values.get(name);
     }
 

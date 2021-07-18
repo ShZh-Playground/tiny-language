@@ -12,9 +12,12 @@ public class Function implements Callable {
 
     private final Environment closure;
 
-    public Function(Stmt.Function declaration, Environment closure) {
+    private final Boolean isInit;
+
+    public Function(Stmt.Function declaration, Environment closure, Boolean isInit) {
         this.closure = (Environment) closure.clone();
         this.declaration = declaration;
+        this.isInit = isInit;
     }
 
     @Override
@@ -32,7 +35,12 @@ public class Function implements Callable {
         try {
             interpreter.executeBlock(declaration.body, environment);
         } catch (ReturnError returnValue) {
+            if (this.isInit) return closure.getAt(0, "this");
             return returnValue.value;
+        }
+
+        if (this.isInit) {
+            return this.closure.getAt(0, "this");
         }
 
         return null;
@@ -43,9 +51,9 @@ public class Function implements Callable {
         return "<fn " + declaration.name.lexeme + ">";
     }
 
-    public Object bind(Instance instance) {
+    public Function bind(Instance instance) {
         Environment environment = new Environment(closure);
         environment.define("this", instance);
-        return new Function(declaration, environment);
+        return new Function(declaration, environment, this.isInit);
     }
 }

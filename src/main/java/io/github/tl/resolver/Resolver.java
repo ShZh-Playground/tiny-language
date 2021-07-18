@@ -16,7 +16,8 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     private enum FunctionType {
         NONE,
         FUNCTION,
-        METHOD
+        METHOD,
+        INITIALIZER,
     }
 
     private Interpreter interpreter;
@@ -165,6 +166,9 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         for (Stmt.Function method : stmt.methods) {
             FunctionType declaration = FunctionType.METHOD;
+            if (method.name.lexeme.equals("init")) {
+                declaration = FunctionType.INITIALIZER;
+            }
             resolveFunction(method, declaration);
         }
 
@@ -184,6 +188,9 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Void visitReturnStmt(Stmt.Return stmt) {
         if (this.currentFunctionType == FunctionType.NONE) {
             error(stmt.keyword, "Can't return from top-level code.");
+        }
+        if (this.currentFunctionType == FunctionType.INITIALIZER) {
+            error(stmt.keyword, "Can't return a value from an initializer.");
         }
 
         resolve(stmt.value);
