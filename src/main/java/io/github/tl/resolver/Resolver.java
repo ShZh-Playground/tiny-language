@@ -20,11 +20,19 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         INITIALIZER,
     }
 
+    private enum ClassType {
+        NONE,
+        CLASS,
+        SUBCLASS,
+    }
+
     private Interpreter interpreter;
 
     private Stack<Map<String, Boolean>> scopes = new Stack<>();
 
     private FunctionType currentFunctionType = FunctionType.NONE;
+
+    private ClassType currentClassType = ClassType.NONE;
 
     public Resolver(Interpreter interpreter) {
         this.interpreter = interpreter;
@@ -97,6 +105,11 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitSuperExpr(Expr.Super expr) {
+        if (this.currentClassType == ClassType.NONE) {
+            error(expr.keyword, "Can't use 'super' outside of a class.");
+        } else if (this.currentClassType != ClassType.SUBCLASS) {
+            error(expr.keyword, "Can't use 'super' in a class with no superclass.");
+        }
         resolveLocal(expr, expr.keyword);
         return null;
     }
@@ -165,6 +178,7 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitClassStmt(Stmt.Class stmt) {
+        this.currentClassType = ClassType.CLASS;
         declare(stmt.name);
 
         if (stmt.superclass != null && stmt.name.lexeme.equals(stmt.superclass.name.lexeme)) {
@@ -172,6 +186,7 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
 
         if (stmt.superclass != null) {
+            this.currentClassType = ClassType.SUBCLASS;
             resolve(stmt.superclass);
         }
 
@@ -198,6 +213,7 @@ public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         endScope();
 
         define(stmt.name);
+        this.currentClassType = ClassType.NONE;
         return null;
     }
 

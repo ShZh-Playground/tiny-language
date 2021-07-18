@@ -1,6 +1,5 @@
 package main.java.io.github.tl.resolver;
 
-import main.java.io.github.tl.ast.Expr;
 import main.java.io.github.tl.error.RuntimeError;
 import main.java.io.github.tl.scan.Token;
 
