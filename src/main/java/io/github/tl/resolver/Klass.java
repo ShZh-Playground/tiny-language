@@ -10,10 +10,13 @@ import java.util.Map;
 public class Klass implements Callable {
     private final String name;
 
+    private Klass superclass;
+
     private Map<String, Function> methods;
 
-    public Klass(String name, Map<String, Function> methods) {
+    public Klass(String name, Klass superclass, Map<String, Function> methods) {
         this.name = name;
+        this.superclass = superclass;
         this.methods = methods;
     }
 
@@ -40,7 +43,14 @@ public class Klass implements Callable {
     }
 
     public Function findMethod(String name) {
-        return this.methods.get(name);
+        if (this.methods == null) {
+            return null;
+        }
+        Function method = this.methods.get(name);
+        if (method == null && this.superclass != null) {
+            method = this.superclass.findMethod(name);
+        }
+        return method;
     }
 
     public String getName() {

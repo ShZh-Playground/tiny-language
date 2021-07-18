@@ -180,8 +180,14 @@ public class Parser {
 
     private Stmt classStatement() {
         Token name = consume(IDENTIFIER, "Expected class name!");
-        consume(LEFT_BRACE, "Expected '{' after class!");
 
+        Expr.Variable superclass = null;
+        if (match(LESS)) {
+            consume(IDENTIFIER, "Expect superclass name.");
+            superclass = new Expr.Variable(previous());
+        }
+
+        consume(LEFT_BRACE, "Expected '{' after class!");
         List<Stmt.Function> methods = new ArrayList<>();
         while (!check(RIGHT_BRACE) && !isAtEnd()) {
             Stmt.Function method = function("method");
@@ -189,7 +195,7 @@ public class Parser {
         }
         consume(RIGHT_BRACE, "Expected '}' after '}'");
 
-        return new Stmt.Class(name, methods);
+        return new Stmt.Class(name, superclass, methods);
     }
 
     // Transfer for statement to while statement

@@ -298,13 +298,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitClassStmt(Stmt.Class stmt) {
+        Object superclass = null;
+        if (stmt.superclass != null) {
+            superclass = evaluate(stmt.superclass);
+            if (!(superclass instanceof Klass)) {
+                throw new RuntimeError(stmt.superclass.name, "Superclass must be a class.");
+            }
+        }
+
         environment.define(stmt.name.lexeme, null);
         Map<String, Function> methods = new HashMap<>();
         for (Stmt.Function method : stmt.methods) {
             Function function = new Function(method, environment, method.name.lexeme.equals("init"));
             methods.put(method.name.lexeme, function);
         }
-        Klass klass = new Klass(stmt.name.lexeme, methods);
+        Klass klass = new Klass(stmt.name.lexeme, (Klass) superclass, methods);
         environment.assign(stmt.name, klass);
         return null;
     }
