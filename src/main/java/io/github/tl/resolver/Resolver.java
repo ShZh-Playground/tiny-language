@@ -13,22 +13,9 @@ import java.util.Stack;
 import static main.java.io.github.tl.TinyLanguage.error;
 
 public class Resolver implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-    private enum FunctionType {
-        NONE,
-        FUNCTION,
-        METHOD,
-        INITIALIZER,
-    }
+    private final Interpreter interpreter;
 
-    private enum ClassType {
-        NONE,
-        CLASS,
-        SUBCLASS,
-    }
-
-    private Interpreter interpreter;
-
-    private Stack<Map<String, Boolean>> scopes = new Stack<>();
+    private final Stack<Map<String, Boolean>> scopes = new Stack<>();
 
     private FunctionType currentFunctionType = FunctionType.NONE;
 

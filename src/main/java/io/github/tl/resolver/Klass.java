@@ -8,9 +8,9 @@ import java.util.Map;
 public class Klass implements Callable {
     private final String name;
 
-    private Klass superclass;
+    private final Klass superclass;
 
-    private Map<String, Function> methods;
+    private final Map<String, Function> methods;
 
     public Klass(String name, Klass superclass, Map<String, Function> methods) {
         this.name = name;

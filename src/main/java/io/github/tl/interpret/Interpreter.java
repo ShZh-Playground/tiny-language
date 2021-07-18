@@ -21,7 +21,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Environment globals = new Environment();
     private Environment environment = globals;
 
-    private Map<Expr, Integer> locals = new HashMap<>();
+    private final Map<Expr, Integer> locals = new HashMap<>();
 
     //region interpreter logic
     private Object evaluate(Expr expression) {
@@ -109,15 +109,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
 
                 if (left instanceof String && right instanceof String) {
-                    return (String)left + (String)right;
+                    return left + (String)right;
                 }
 
                 if (left instanceof String && right instanceof Double) {
-                    return (String)left + stringify(right);
+                    return left + stringify(right);
                 }
 
                 if (left instanceof Double && right instanceof String) {
-                    return stringify(left) + (String)right;
+                    return stringify(left) + right;
                 }
 
                 break;
@@ -251,11 +251,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (isTruthy(condition)) {
             Object left = evaluate(expr.left);
             checkNumberOperand(expr.question, left);
-            return (double)left;
+            return left;
         } else {
             Object right = evaluate(expr.right);
             checkNumberOperand(expr.question, right);
-            return (double)right;
+            return right;
         }
     }
 

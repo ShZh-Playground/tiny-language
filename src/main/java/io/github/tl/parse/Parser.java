@@ -4,7 +4,6 @@ import main.java.io.github.tl.TinyLanguage;
 import main.java.io.github.tl.ast.Expr;
 import main.java.io.github.tl.ast.Stmt;
 import main.java.io.github.tl.error.ParseError;
-import main.java.io.github.tl.resolver.Instance;
 import main.java.io.github.tl.scan.Token;
 import main.java.io.github.tl.scan.TokenType;
 
@@ -84,8 +83,7 @@ public class Parser {
                     error(peek(), "Can't have more than 255 parameters.");
                 }
 
-                parameters.add(
-                        consume(IDENTIFIER, "Expect parameter name."));
+                parameters.add(consume(IDENTIFIER, "Expect parameter name."));
             } while (match(COMMA));
         }
         consume(RIGHT_PAREN, "Expect ')' after parameters.");
